@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { useAtom } from 'jotai'
 import { useEffect, useRef, useState } from 'react'
 import { BsArchive } from 'react-icons/bs'
+import { useSearchParams } from 'react-router-dom'
 
 import { categorizeTasksByPage } from '@/newHelper/task'
 import { backlogTasksAtom } from '@/newModel/tasks'
@@ -16,9 +17,10 @@ const Backlog = () => {
   const [backlogTasks] = useAtom(backlogTasksAtom)
   const categorizedTasks = categorizeTasksByPage(backlogTasks)
   const projects = categorizedTasks.map(({ project }) => project)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterProjectIdsFromUrl = searchParams.get('projectIds')
 
-  const [filterProjectIds, setFilterProjectIds] = useState<string[]>([])
-
+  const filterProjectIds = filterProjectIdsFromUrl ? filterProjectIdsFromUrl.split(',') : []
   const showCategorizedTasks = categorizedTasks.filter((categorizedTask) => {
     if (filterProjectIds?.length > 0) {
       return filterProjectIds.includes(categorizedTask.project.id)
@@ -26,6 +28,15 @@ const Backlog = () => {
     return true
   })
 
+  const handleFilterProjectIdsChange = (newFilterProjectIds: string[]) => {
+    if (newFilterProjectIds.length === 0) {
+      const newSearchParams = new URLSearchParams(searchParams.toString())
+      newSearchParams.delete('projectIds')
+      setSearchParams(newSearchParams)
+    } else {
+      setSearchParams({ projectIds: newFilterProjectIds.join(',') })
+    }
+  }
   useEffect(() => {
     if (taskContainerRef.current) {
       new Draggable(taskContainerRef.current, {
@@ -41,7 +52,7 @@ const Backlog = () => {
           showSearch
           allowClear
           value={filterProjectIds}
-          onChange={setFilterProjectIds}
+          onChange={handleFilterProjectIdsChange}
           bordered={false}
           suffixIcon={null}
           className="w-[160px]"

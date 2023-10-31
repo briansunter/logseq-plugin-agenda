@@ -3,6 +3,7 @@ import { FloatButton, Modal, message } from 'antd'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { TbComet, TbSettings } from 'react-icons/tb'
+import { BrowserRouter } from 'react-router-dom'
 
 import useAgendaTasks from '@/hooks/useAgendaTasks'
 import useNewProjects from '@/hooks/useNewProjects'
@@ -42,41 +43,43 @@ const Dashboard = () => {
     })
   }, [])
   return (
-    <div className="flex w-screen h-screen bg-gray-100 before:absolute before:pointer-events-none before:h-[180px] before:w-[240px] before:left-1/2 before:top-1/2 before:bg-gradient-conic before:from-sky-200 before:via-blue-200 before:blur-2xl before:content-['']  before:dark:from-sky-900 before:dark:via-[#0141ff] before:dark:opacity-40">
-      {/* ========== projects sidebar ========== */}
-      <ProjectSidebar className="hidden" />
+    <BrowserRouter>
+      <div className="flex w-screen h-screen bg-gray-100 before:absolute before:pointer-events-none before:h-[180px] before:w-[240px] before:left-1/2 before:top-1/2 before:bg-gradient-conic before:from-sky-200 before:via-blue-200 before:blur-2xl before:content-['']  before:dark:from-sky-900 before:dark:via-[#0141ff] before:dark:opacity-40">
+        {/* ========== projects sidebar ========== */}
+        <ProjectSidebar className="hidden" />
 
-      {/* ========== Multiple View ========= */}
-      <MultipleView className="flex-1" />
+        {/* ========== Multiple View ========= */}
+        <MultipleView className="flex-1" />
 
-      {/* ========== Sidebar ========= */}
-      {app.view === 'calendar' ? <Backlog /> : <TimeBox onChangeType={() => setTimeBoxType('actual')} />}
+        {/* ========== Sidebar ========= */}
+        {app.view === 'calendar' ? <Backlog /> : <TimeBox onChangeType={() => setTimeBoxType('actual')} />}
 
-      {/* ========== Toolbar ======== */}
-      <div></div>
+        {/* ========== Toolbar ======== */}
+        <div></div>
 
-      {/* ========== Float Button ========= */}
-      {/* <FloatButton.Group trigger="hover" type="primary" icon={<TbComet />}>
+        {/* ========== Float Button ========= */}
+        {/* <FloatButton.Group trigger="hover" type="primary" icon={<TbComet />}>
         <FloatButton tooltip="Backlog" />
         <FloatButton tooltip="Daily Log" />
         <FloatButton tooltip="Weekly Review" />
         <FloatButton tooltip="Analytics" />
         <FloatButton tooltip="Settings" icon={<TbSettings />} />
       </FloatButton.Group> */}
-      <Analytics />
-      <Modal
-        open={connectionErrorModal}
-        title="Connection Error"
-        onCancel={() => setConnectionErrorModal(false)}
-        okText="Refresh"
-        onOk={() => window.location.reload()}
-      >
-        <div>Please check the logseq api configuration and refresh the page to try again.</div>
-        <a href="https://haydenut.notion.site/Agenda3-ef115e277c864de3b2679d6bda0e6376?pvs=4">
-          Reference Documents: https://haydenut.notion.site/Agenda3-ef115e277c864de3b2679d6bda0e6376?pvs=4
-        </a>
-      </Modal>
-    </div>
+        <Analytics />
+        <Modal
+          open={connectionErrorModal}
+          title="Connection Error"
+          onCancel={() => setConnectionErrorModal(false)}
+          okText="Refresh"
+          onOk={() => window.location.reload()}
+        >
+          <div>Please check the logseq api configuration and refresh the page to try again.</div>
+          <a href="https://haydenut.notion.site/Agenda3-ef115e277c864de3b2679d6bda0e6376?pvs=4">
+            Reference Documents: https://haydenut.notion.site/Agenda3-ef115e277c864de3b2679d6bda0e6376?pvs=4
+          </a>
+        </Modal>
+      </div>
+    </BrowserRouter>
   )
 }
 
